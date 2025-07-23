@@ -1,31 +1,35 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Maintenance Control</title>
-  <!-- Load Firebase once -->
+  <title>My Homepage</title>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
   <script>
-    // Prevent multiple initializations
+    // Check if Firebase has already been initialized
     if (!firebase.apps.length) {
-      var firebaseConfig = {
+      firebase.initializeApp({
         apiKey: "AIzaSyDN3gVB85AyNEdkGIuGX7D293GxH9cWxOQ",
         authDomain: "august-6-f90e2.firebaseapp.com",
         databaseURL: "https://august-6-f90e2-default-rtdb.firebaseio.com",
         projectId: "august-6-f90e2"
-      };
-      firebase.initializeApp(firebaseConfig);
+      });
     }
 
-    function setMaintenance(state) {
-      firebase.database().ref("maintence").set(state);
-      alert("Maintenance mode is now: " + (state ? "ON" : "OFF"));
-    }
+    // Listen for maintenance mode
+    firebase.database().ref("maintence").on("value", function(snapshot) {
+      const isOn = snapshot.val();
+      if (isOn === true) {
+        document.body.innerHTML = "<h2 style='text-align:center;margin-top:50px;'>🛠️ This site is under maintenance. Please check back later.</h2>";
+      } else {
+        document.getElementById("content").style.display = "block";
+      }
+    });
   </script>
 </head>
-<body style="text-align:center; font-family:sans-serif; margin-top:50px;">
-  <h2>🛠️ Maintenance Control</h2>
-  <button onclick="setMaintenance(true)" style="padding:10px 20px; font-size:16px;">Turn ON</button>
-  <button onclick="setMaintenance(false)" style="padding:10px 20px; font-size:16px; margin-left:10px;">Turn OFF</button>
+<body>
+  <div id="content" style="display:none;">
+    <h1>Welcome to the Homepage</h1>
+    <p>This is your regular site content.</p>
+  </div>
 </body>
 </html>
